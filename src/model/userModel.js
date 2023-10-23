@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  tweets:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Tweet'
+  }],
   password: {
     type: String,
     required: true,

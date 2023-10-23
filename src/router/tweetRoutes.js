@@ -1,13 +1,11 @@
 const express = require('express')
+const { protect } = require('../middleware/authMiddleware')
+const { createTweet, getAllTweets } = require('../controller/tweetController')
 const router = express.Router()
 
-router.get('/',(req,res)=>{
-    res.json({"sending from router":"1"})
-})
 
-router.post('/',(req,res)=>{
-    res.json({"sending from router":"1"})
-})
+
+router.route('/').get(protect,getAllTweets).post(protect,createTweet)
 
 router.put('/:id',(req,res)=>{
     res.json({"sending from router":"1"})

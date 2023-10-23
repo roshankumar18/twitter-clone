@@ -24,23 +24,18 @@ exports.loginUser = async (req,res)=>{
 }
 
 exports.userById  = async(req,res)=>{
-    console.log(req.params.id)
-    try{
-        if(mongoose.Types.ObjectId.isValid(req.params.id)){
-            const user = await User.findById(req.params.id).select('-password')
-            if(!user){
-            res.status(401).json({"message":"User not found"})
-            }
-            else{
-                res.status(200).json(user)
-            }
-        }else{
-            res.status(401).json({"message":"invaid user id"})
-        }
-}catch(err){
-    console.log(err.message)
+   
+   
+    const user = await User.findById(req.userId).select('-password').populate('tweets')
+    if(!user){
+    res.status(401).json({"message":"User not found"})
+    }
+    else{
+        res.status(200).json(user)
+    }
+    
 }
-}
+
 
 exports.createUser =async (req,res)=>{
     const {userName,email,password} = req.body
