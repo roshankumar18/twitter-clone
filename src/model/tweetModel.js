@@ -1,4 +1,5 @@
 const { default: mongoose } = require("mongoose");
+const findOrCreatePlugin = require("mongoose-findorcreate");
 
 const tweetSchema = new mongoose.Schema({
     user:{
@@ -14,12 +15,16 @@ const tweetSchema = new mongoose.Schema({
     image:{
         type:String
     },
+    like:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }],
     comment:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Comment',
-        trim:true
     }]
-})
-
+},
+{timeStamp :true})
+tweetSchema.plugin(findOrCreatePlugin)
 const Tweet = mongoose.model('Tweet',tweetSchema)
 module.exports = Tweet

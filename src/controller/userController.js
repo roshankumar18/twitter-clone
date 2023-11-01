@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const { json } = require('express')
 const jwt = require('jsonwebtoken')
 const { default: mongoose } = require('mongoose')
+const Tweet = require('../model/tweetModel')
 
 exports.loginUser = async (req,res)=>{
     const {email,password} = req.body
@@ -26,7 +27,7 @@ exports.loginUser = async (req,res)=>{
 exports.userById  = async(req,res)=>{
    
    
-    const user = await User.findById(req.userId).select('-password').populate('tweets')
+    const user = await User.findById(req.userId).select('-password').populate({path:'tweets',populate:{path:'comment'}})
     if(!user){
     res.status(401).json({"message":"User not found"})
     }
@@ -45,4 +46,19 @@ exports.createUser =async (req,res)=>{
     res.status(201).json({user})
 }
 
-// module.exports = {createUser,loginUser,userById}
+exports.deleteUserById = async(req,res)=>{
+    if(req.userId==req.params.id){
+        await User.findByIdAndDelete(req.params.id)
+        await Tweet.deleteMany({user:req.params.id})
+        res.status(200).json("User deleted")
+    }
+}
+
+exports.getTimeline = async(req,res)=>{
+    const user = await User.findById(req.userId)
+    const followingTweets = await Promise.all(user.following.map(followingId=>{
+        return Tweet.find({user:followingId})
+    }))
+    res.json(followingTweets)
+    
+}
