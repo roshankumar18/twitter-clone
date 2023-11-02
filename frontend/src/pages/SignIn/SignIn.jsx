@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginFailed, loginStart, loginSuccess } from '../../redux/UserSlice'
 import { useNavigate } from 'react-router-dom'
@@ -7,16 +7,26 @@ import { useNavigate } from 'react-router-dom'
 const SignIn = () => {
     const [email,setEmail] = useState()
     const [password,setPassword] = useState()
+    
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+
+  
+
     const handleLogin = async(e) =>{
         e.preventDefault()
         try{
             dispatch(loginStart())
-        const  response = await axios.post("http://localhost:4000/user/login",{email,password})
+        const  token = await axios.post("http://localhost:5000/user/login",{email,password})
+        localStorage.setItem("token",token.data.token)
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        }
+        const response = await axios.get("http://localhost:5000/user/" , config)
         dispatch(loginSuccess(response.data))
         navigate("/")
-        console.log(response)
         }catch(e){
             dispatch(loginFailed())
             console.log(e)
