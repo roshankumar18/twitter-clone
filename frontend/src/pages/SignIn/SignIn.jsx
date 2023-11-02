@@ -16,15 +16,15 @@ const SignIn = () => {
   
 
     const handleLogin = async(e) =>{
-        e.preventDefault()
+        e.preventDefault()  
         try{
             dispatch(loginStart())
-        const  token = await axios.post("http://localhost:5000/user/login",{email,password})
+        const  token = await axios.post("user/login",{email,password})
         localStorage.setItem("token",token.data.token)
         const config = {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         }
-        const response = await axios.get("http://localhost:5000/user/" , config)
+        const response = await axios.get("user/" , config)
         dispatch(loginSuccess(response.data))
         navigate("/")
         }catch(e){

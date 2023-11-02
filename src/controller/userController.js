@@ -24,9 +24,9 @@ exports.loginUser = async (req,res)=>{
     }
 }
 
-exports.userById  = async(req,res)=>{
-   
-   
+exports.getUser  = async(req,res)=>{
+    console.log("in get user")
+    console.log(req.userId)
     const user = await User.findById(req.userId).select('-password').populate({path:'tweets',populate:{path:'comment'}})
     if(!user){
     res.status(401).json({"message":"User not found"})
@@ -35,6 +35,16 @@ exports.userById  = async(req,res)=>{
         res.status(200).json(user)
     }
     
+}
+
+exports.userById = async(req,res)=>{
+    const user = await User.findById(req.params.id).select('-password').populate({path:'tweets',populate:{path:'comment'}})
+    if(!user){
+    res.status(401).json({"message":"User not found"})
+    }
+    else{
+        res.status(200).json(user)
+    }
 }
 
 
@@ -54,11 +64,14 @@ exports.deleteUserById = async(req,res)=>{
     }
 }
 
-exports.getTimeline = async(req,res)=>{
+exports.getTimelines = async(req,res)=>{
+    
     const user = await User.findById(req.userId)
+    const userTweet = await Tweet.find({user:req.userId})
     const followingTweets = await Promise.all(user.following.map(followingId=>{
         return Tweet.find({user:followingId})
     }))
-    res.json(followingTweets)
+    res.json(followingTweets.concat(...userTweet))
+    
     
 }

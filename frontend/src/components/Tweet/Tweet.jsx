@@ -20,7 +20,7 @@ const Tweet = ({ tweet, setData }) => {
       try {
 
         const findUser = await axios.get(`/user/${tweet.user}`);
-        console.log(findUser.data)
+    
         setUserData(findUser.data);
       } catch (err) {
         console.log("error", err);
@@ -40,16 +40,18 @@ const Tweet = ({ tweet, setData }) => {
             await axios.put(`tweets/like/${tweet._id}`,null,config)
 
         if (location.includes("profile")) {
-            // const newData = await axios.get(`/tweets/user/all/${id}`);
-            // setData(newData.data);
+            
+            const userTweets = await axios.get(`tweets/${id}`,config); 
+            setData(userTweets.data.tweets);
         } else if (location.includes("explore")) {
-            // const newData = await axios.get(`/tweets/explore`);
-            // setData(newData.data);
+            const exploreTweets = await axios.get("/tweets/explore",config);
+       
+            setData(exploreTweets.data.exploreTweet);
         } else {
             const newData = await axios.get("user/timelines",config);
             setData(newData.data);
       }
-        }catch(err){
+        }catch(err){    
             console.log(err)
         }
 

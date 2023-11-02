@@ -14,5 +14,4 @@ exports.likeTweet = async(req,res) => {
         res.json("Tweet disliked")
     }
     
-    
 }

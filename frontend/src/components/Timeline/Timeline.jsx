@@ -14,7 +14,7 @@ const Timeline = () => {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         }
             try{
-                const timeLineTweets = await axios.get("http://localhost:5000/user/timelines",config)
+                const timeLineTweets = await axios.get("user/timelines",config)
                 setTimeline(timeLineTweets.data)
 
             }catch(err){

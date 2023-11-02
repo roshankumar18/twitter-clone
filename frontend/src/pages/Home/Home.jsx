@@ -3,7 +3,7 @@ import LeftSideBar from '../../components/LeftSidebar/LeftSidebar'
 import RightSideBar from '../../components/RightSideBar/RightSideBar'
 import { useSelector } from 'react-redux'
 import SignIn from '../SignIn/SignIn'
-import Timeline from '../../components/Timeline/Timeline'
+import MainTweet from '../../components/MainTweet/MainTweet'
 
 const Home = () => {
     const {currentUser} = useSelector((state)=>state.user)
@@ -16,7 +16,7 @@ const Home = () => {
                 <LeftSideBar/>
             </div>
             <div className='col-span-2 border-x-2 border-t-slate-800 px-6'>
-               <Timeline/>
+               <MainTweet/>
             </div>
             <div className='px-6'>
                 <RightSideBar/>
