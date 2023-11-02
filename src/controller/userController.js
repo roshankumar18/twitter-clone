@@ -8,7 +8,7 @@ const Tweet = require('../model/tweetModel')
 exports.loginUser = async (req,res)=>{
     const {email,password} = req.body
     if(!email){
-        return res.json("email is empty")
+        return res.status(400).json("email is empty")
     }
     const user = await User.findOne({email:email})
     if(!user){
@@ -18,7 +18,7 @@ exports.loginUser = async (req,res)=>{
     if(passwordmatch){
         const token = jwt.sign({userId:user.id,
         email:email},process.env.JWT_SECRET,{ expiresIn: '1h' })
-        res.status(201).json(token)
+        res.status(201).json({token})
     }else{
         res.status(401).json("authentication failed")
     }
