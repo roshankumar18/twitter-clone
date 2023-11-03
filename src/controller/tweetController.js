@@ -14,8 +14,8 @@ exports.createTweet = async(req,res)=>{
 }
 
 exports.getAllTweets = async(req,res) => {
-    const allTweets = await Tweet.find({user:req.params.id}).populate('comment')
-    res.json({tweets:allTweets})
+    const allTweets = await Tweet.find({_id:req.params.id}).populate('comment')
+    res.json(allTweets)
 }
 
 // exports.getTweetById = async(req,res) => {

@@ -23,10 +23,10 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     }
       try {
-        const userTweets = await axios.get(`/tweets/${id}`,config);
+        
         const userProfile = await axios.get(`/user/${id}`,config);
 
-        setUserTweets(userTweets.data.tweets);
+        setUserTweets(userProfile.data.tweets);
         setUserProfile(userProfile.data);
       } catch (err) {
         console.log("error", err);

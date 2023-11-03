@@ -20,7 +20,7 @@ const ExploreTweet = () => {
       }
     };
     fetchData();
-  }, [currentUser._id]);
+  }, [currentUser._id,setExplore]);
   return (
     <div className="mt-6">
       {explore &&

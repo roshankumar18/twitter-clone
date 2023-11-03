@@ -22,7 +22,7 @@ const Timeline = () => {
             }
         }
         fetchData()
-    },[currentUser._id])
+    },[currentUser._id,setTimeline])
 
     return (
         <div className="mt-6">

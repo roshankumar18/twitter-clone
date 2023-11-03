@@ -60,7 +60,7 @@ const Tweet = ({ tweet, setData }) => {
     return (
         <>
         <div className="flex space-x-2">
-            <Link to={`/profile/${tweet._id}`} >
+            <Link to={`/profile/${tweet.user}`} >
                 <h3 className='font-bold'>{userData.username}</h3>
             </Link>
              <span className="font-normal">@{userData.username}</span>
