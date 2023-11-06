@@ -1,16 +1,32 @@
 const Tweet = require("../model/tweetModel")
 const User = require("../model/userModel")
+const cloudinary = require('cloudinary').v2
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+  })
 
 exports.createTweet = async(req,res)=>{
+    try{
     const {tweet} = req.body
+    const image = req.file?req.file.path:null
+    if(image!=null)
+    {const cloudImage = await cloudinary.uploader.upload(image)}
     const tweetModel = await Tweet.create({
         user:req.userId,
-        tweet:tweet
+        tweet:tweet,
+        image:image?cloudImage.url:null
     })
     const user = await User.findById(req.userId)
     user.tweets.push(tweetModel)
     await user.save()
     res.json({tweetModel})
+}catch(err){
+    console.log(err)
+    res.status(500).json({"message":"failure"})
+}
 }
 
 exports.getAllTweets = async(req,res) => {

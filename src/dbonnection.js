@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
-const connect = async()=>{
+let connect
+try{
+ connect = async()=>{
     const connectiion = await mongoose.connect(process.env.CONN_STRING)
     console.log(connectiion.connection.host)
+}}catch(err){
+    console.log(err)
 }
 
 module.exports = connect

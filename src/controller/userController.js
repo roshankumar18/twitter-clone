@@ -4,7 +4,13 @@ const { json } = require('express')
 const jwt = require('jsonwebtoken')
 const { default: mongoose } = require('mongoose')
 const Tweet = require('../model/tweetModel')
+const cloudinary = require('cloudinary').v2
 
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+  })
 exports.loginUser = async (req,res)=>{
     const {email,password} = req.body
     if(!email){
@@ -14,6 +20,7 @@ exports.loginUser = async (req,res)=>{
     if(!user){
         return res.status(401).json({"message":"user not exists"})
     }
+    try{
     const passwordmatch =await bcrypt.compare(password,user.password)
     if(passwordmatch){
         const token = jwt.sign({userId:user.id,
@@ -22,6 +29,10 @@ exports.loginUser = async (req,res)=>{
     }else{
         res.status(401).json("authentication failed")
     }
+}catch(err){
+    res.status(500).json({"message":"failure"})
+    console.log(err)
+}
 }
 
 exports.getUser  = async(req,res)=>{
@@ -74,4 +85,22 @@ exports.getTimelines = async(req,res)=>{
     res.json(followingTweets.concat(...userTweet))
     
     
+}
+
+exports.uploadImage = async(req,res)=>{
+    console.log(req.file)
+    try{
+    const data = {
+        image: req.file.path
+       }
+       const cloudImage = await cloudinary.uploader.upload(data.image)
+       const user = await User.findOneAndUpdate({_id:req.userId},{profileImage:cloudImage.url},{new:true})
+       res.status(200).json({"url":cloudImage.url})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({
+            "message":"failure"
+        })
+    }
+     
 }

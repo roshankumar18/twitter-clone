@@ -1,8 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const { userById, createUser, loginUser, deleteUserById, getUser, getTimelines } = require('../controller/userController')
+const { userById, createUser, loginUser, deleteUserById, getUser, getTimelines, uploadImage } = require('../controller/userController')
 const { protect } = require('../middleware/authMiddleware')
 const { followUser, unFollowUser } = require('../controller/followController')
+const upload = require('../upload')
+
+
+
+router.put('/',upload.single('image'),protect,uploadImage)
 
 router.post('/register',createUser)
 
