@@ -4,6 +4,7 @@ const { json } = require('express')
 const jwt = require('jsonwebtoken')
 const { default: mongoose } = require('mongoose')
 const Tweet = require('../model/tweetModel')
+const { addUserValidation } = require('../validator')
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
@@ -60,10 +61,13 @@ exports.userById = async(req,res)=>{
 
 
 exports.createUser =async (req,res)=>{
-    const {userName,email,password} = req.body
+    const {username,email,password} = req.body
+    const {error,value} = addUserValidation(req.body)
+    if(error)
+        return res.status(400).json({"errors":error.details})
     const salt = 5
     const hashPassword = await bcrypt.hash(password,salt)
-    const user =await User.create({username:userName,email:email,password:hashPassword})
+    const user =await User.create({username:username,email:email,password:hashPassword})
     res.status(201).json({user})
 }
 

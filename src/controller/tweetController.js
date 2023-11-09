@@ -1,5 +1,6 @@
 const Tweet = require("../model/tweetModel")
 const User = require("../model/userModel")
+const { addTweetValidation } = require("../validator")
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
@@ -12,8 +13,14 @@ exports.createTweet = async(req,res)=>{
     try{
     const {tweet} = req.body
     const image = req.file?req.file.path:null
+    
+    const {error,value}=addTweetValidation({tweet,image})
+    if(error)
+        return res.status(400).json({"errors":error.details})
+
     if(image!=null)
-    {const cloudImage = await cloudinary.uploader.upload(image)}
+    { const cloudImage = await cloudinary.uploader.upload(image)}
+    
     const tweetModel = await Tweet.create({
         user:req.userId,
         tweet:tweet,

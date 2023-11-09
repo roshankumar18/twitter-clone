@@ -22,13 +22,13 @@ const Timeline = () => {
             }
         }
         fetchData()
-    },[currentUser._id,setTimeline])
+    },[currentUser._id])
 
     return (
         <div className="mt-6">
             {timeline && timeline.map((tweet)=>{
                 return <div key ={tweet._id} className='p-2'>
-                    <Tweet tweet={tweet}   setTimeline={setTimeline}/>
+                    <Tweet tweet={tweet}   setData={setTimeline}/>
                 </div>
             })}
         </div>
