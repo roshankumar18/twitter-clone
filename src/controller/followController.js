@@ -9,12 +9,12 @@ exports.followUser = async (req,res)=>{
         {currentUser.following.push(user)
         await currentUser.save()
         user.followers.push(currentUser)
-        await currentUser.save()
+        await user.save()
         res.json({
             "message":"Followed"
         })
     }else{
-        res.status(403).json("You are already following")
+        res.status(403).json({"message":"You are already following"})
     }
 }
 
@@ -33,6 +33,6 @@ exports.unFollowUser = async (req,res)=>{
             "message":"UnFollowed"
         })
     }else{
-        res.status(403).json("You are not following the user")
+        res.status(403).json({"user":"You are not following the user"})
     }
 }

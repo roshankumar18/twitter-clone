@@ -13,13 +13,13 @@ exports.createTweet = async(req,res)=>{
     try{
     const {tweet} = req.body
     const image = req.file?req.file.path:null
-    
+    let cloudImage
     const {error,value}=addTweetValidation({tweet,image})
     if(error)
         return res.status(400).json({"errors":error.details})
 
     if(image!=null)
-    { const cloudImage = await cloudinary.uploader.upload(image)}
+        cloudImage = await cloudinary.uploader.upload(image)
     
     const tweetModel = await Tweet.create({
         user:req.userId,

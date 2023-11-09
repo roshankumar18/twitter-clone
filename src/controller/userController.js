@@ -80,15 +80,22 @@ exports.deleteUserById = async(req,res)=>{
 }
 
 exports.getTimelines = async(req,res)=>{
-    
+    try{
     const user = await User.findById(req.userId)
     const userTweet = await Tweet.find({user:req.userId})
     const followingTweets = await Promise.all(user.following.map(followingId=>{
         return Tweet.find({user:followingId})
     }))
-    res.json(followingTweets.concat(...userTweet))
-    
-    
+    console.log(followingTweets)
+    if(followingTweets.length==0)
+        return res.json(userTweet)
+        
+    res.json(followingTweets[0].concat(...userTweet))
+}catch(err)
+{
+    console.log(err)
+    res.status(500).json({"message":err})
+}    
 }
 
 exports.uploadImage = async(req,res)=>{

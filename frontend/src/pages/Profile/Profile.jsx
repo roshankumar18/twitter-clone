@@ -6,18 +6,51 @@ import axios from 'axios';
 import Tweet from '../../components/Tweet/Tweet';
 import RightSideBar from '../../components/RightSideBar/RightSideBar';
 import EditProfile from '../../components/EditProfile/EditProfile';
+import { loginSuccess } from '../../redux/UserSlice';
 
 const Profile = () => {
      const [open, setOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [userTweets, setUserTweets] = useState([]);
-  const [userProfile, setUserProfile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  
 
   const { id } = useParams();
   const dispatch = useDispatch();
 
+  const handleFollow = async() =>{
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+  }
+  try {
+    let url = "http://localhost:3000/user/follow/"+id
+    await axios.put(url,null,config);
+    url = "http://localhost:3000/user/"
+    // const data = await axios.get(url,config)
+    // dispatch(loginSuccess(data.data))
+  } catch (err) {
+    console.log("error", err);
+  }
+  }
+
+  const unHandleFollow = async() =>{
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+  }
+  try {
+    let url = "http://localhost:3000/user/unfollow/"+id
+    await axios.put(url,null,config);
+    url = "http://localhost:3000/user/"
+    const data = await axios.get(url,config)
+    dispatch(loginSuccess(data.data))
+  } catch (err) {
+    console.log("error", err);
+  }
+  }
 
   useEffect(() => {
+    if(imageUrl =="")
+      setImageUrl(currentUser.profileImage)
     const fetchData = async () => {
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -27,7 +60,6 @@ const Profile = () => {
         const userProfile = await axios.get(`/user/${id}`,config);
 
         setUserTweets(userProfile.data.tweets);
-        setUserProfile(userProfile.data);
       } catch (err) {
         console.log("error", err);
       }
@@ -43,11 +75,11 @@ const Profile = () => {
         </div>
         <div className="col-span-2 border-x-2 border-t-slate-800 px-6">
           <div className="flex justify-between items-center">
-            <img
-              src={userProfile?.profilePicture}
+           {imageUrl && <img
+              src={imageUrl}
               alt="Profile"
               className="w-12 h-12 rounded-full"
-            />
+            />}
             {currentUser._id === id ? (
               <button
                 className="px-4 -y-2 bg-blue-500 rounded-full text-white"
@@ -58,14 +90,14 @@ const Profile = () => {
             ) : currentUser.following.includes(id) ? (
               <button
                 className="px-4 -y-2 bg-blue-500 rounded-full text-white"
-                // onClick={handleFollow}
+                onClick={unHandleFollow}
               >
                 Following
               </button>
             ) : (
               <button
                 className="px-4 -y-2 bg-blue-500 rounded-full text-white"
-                // onClick={handleFollow}
+                onClick={handleFollow}
               >
                 Follow
               </button>
@@ -87,7 +119,7 @@ const Profile = () => {
           <RightSideBar />
         </div>
       </div>
-      {open && <EditProfile setOpen={setOpen} />}
+      {open && <EditProfile setOpen={setOpen} setImageUrl={setImageUrl}/>}
     </>
   );
 }

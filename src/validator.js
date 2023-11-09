@@ -13,7 +13,7 @@ module.exports = {
     addTweetValidation : (data)=>{
         const schema = Joi.object({
             tweet:Joi.string().required(),
-            image: Joi.string().optional()
+            image: Joi.any().optional()
         })
         const {error,value} = schema.validate(data,{abortEarly:false})
         return {error ,value}
