@@ -6,19 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/UserSlice";
 
 const LeftSideBar = () => {
+  const { currentUser } = useSelector((state) => state.user);
 
-    const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const dispatcher = useDispatch();
+  const handleLogout = (e) => {
+    dispatcher(logout());
+  };
 
-    const dispatcher = useDispatch()
-    const handleLogout =(e)=>{
-        dispatcher(logout())
-    }
-
-    return(
+  return (
     <div className="flex flex-col h-full md:h-[90vh] justify-between mr-6">
-      <div className="mt-6 flex flex-col space-y-4">
+      <div className="mt-6 flex flex-col space-y-4 overflow-y-auto">
         <Link to="/">
           <div className="flex items-center space-x-6 px-2 py-2 hover:bg-slate-200 rounded-full cursor-pointer">
             <HomeIcon fontSize="large" />
@@ -37,26 +36,27 @@ const LeftSideBar = () => {
             <p>Profile</p>
           </div>
         </Link>
-        </div>
+      </div>
+      <div className="sticky bottom-0 p-4 bg-white">
         <div className="flex justify-between">
-        <div>
-          <p className="font-bold">{currentUser.username}</p>
-          <p className="font-bold">@{currentUser.username}</p>
-        </div>
-        <div>
-          <Link to="signin">    
-            <button
-              className="bg-red-500 px-4 py-2 text-white rounded-full"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </Link>
+          <div>
+            <p className="font-bold">{currentUser.username}</p>
+            <p className="font-bold">@{currentUser.username}</p>
+          </div>
+          <div>
+            <Link to="signin">
+              <button
+                className="bg-red-500 px-4 py-2 text-white rounded-full"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
-    )
-}
+  );
+};
 
-
-export default LeftSideBar
+export default LeftSideBar;

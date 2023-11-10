@@ -4,30 +4,29 @@ import { useSelector } from 'react-redux'
 import Tweet from '../Tweet/Tweet'
 import { useNavigate } from 'react-router-dom'
 
-const Timeline = () => {
-    const  [timeline,setTimeline] = useState([])
+const Timeline = ({timeline,setTimeline}) => {
 
     const {currentUser} = useSelector((state)=>state.user)
     const naviagte = useNavigate()
    
 
-    useEffect(()=>{
-        const fetchData = async() =>{
-            const config = {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-        }
-            try{
-                const timeLineTweets = await axios.get("user/timelines",config)
+    // useEffect(()=>{
+    //     const fetchData = async() =>{
+    //         const config = {
+    //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    //     }
+    //         try{
+    //             const timeLineTweets = await axios.get("user/timelines",config)
                 
-                setTimeline(timeLineTweets.data)
+    //             setTimeline(timeLineTweets.data)
 
-            }catch(err){
-                naviagte("/signin")
-                console.log(err)
-            }
-        }
-        fetchData()
-    },[currentUser._id])
+    //         }catch(err){
+    //             naviagte("/signin")
+    //             console.log(err)
+    //         }
+    //     }
+    //     fetchData()
+    // },[currentUser._id])
 
     return (
         <div className="mt-6">

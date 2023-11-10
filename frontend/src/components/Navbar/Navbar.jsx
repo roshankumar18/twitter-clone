@@ -1,8 +1,11 @@
 import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+
+  const location = useLocation().pathname
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 my-5 justify-center">
       <div className="mx-auto md:mx-0">
@@ -17,7 +20,11 @@ const Navbar = () => {
       <div className="col-span-2 md:border-x-2 md:border-slate-200 md:px-6 my-6 md:my-0">
         <div className="flex justify-between items-center">
           <h2 className="font-bold text-2xl">
-           Home
+          {location.includes("profile") ? "Profile" : location.includes("explore") ? (
+              "Explore"
+            ) : (
+              "Home"
+            )}
           </h2>
           <StarBorderPurple500Icon />
         </div>
