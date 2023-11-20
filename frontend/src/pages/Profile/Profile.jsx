@@ -7,6 +7,9 @@ import Tweet from '../../components/Tweet/Tweet';
 import RightSideBar from '../../components/RightSideBar/RightSideBar';
 import EditProfile from '../../components/EditProfile/EditProfile';
 import { loginSuccess } from '../../redux/UserSlice';
+import PersonIcon from '@mui/icons-material/Person';
+import MessageIcon from '@mui/icons-material/Message';
+
 
 const Profile = () => {
      const [open, setOpen] = useState(false);
@@ -26,8 +29,8 @@ const Profile = () => {
     let url = "http://localhost:3000/user/follow/"+id
     await axios.put(url,null,config);
     url = "http://localhost:3000/user/"
-    // const data = await axios.get(url,config)
-    // dispatch(loginSuccess(data.data))
+    const data = await axios.get(url,config)
+    dispatch(loginSuccess(data.data))
   } catch (err) {
     console.log("error", err);
   }
@@ -49,8 +52,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if(imageUrl =="")
-      setImageUrl(currentUser.profileImage)
+    
     const fetchData = async () => {
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -58,7 +60,7 @@ const Profile = () => {
       try {
         
         const userProfile = await axios.get(`/user/${id}`,config);
-
+        setImageUrl(userProfile.data.profileImage)
         setUserTweets(userProfile.data.tweets);
       } catch (err) {
         console.log("error", err);
@@ -75,11 +77,13 @@ const Profile = () => {
         </div>
         <div className="col-span-2 border-x-2 border-t-slate-800 px-6">
           <div className="flex justify-between items-center">
-           {imageUrl && <img
-              src={imageUrl}
-              alt="Profile"
+            <img
+              src={imageUrl?imageUrl:PersonIcon}
+              alt={PersonIcon}
               className="w-12 h-12 rounded-full"
-            />}
+            />
+            <div >
+            <MessageIcon className='mr-2'/>
             {currentUser._id === id ? (
               <button
                 className="px-4 -y-2 bg-blue-500 rounded-full text-white"
@@ -102,6 +106,7 @@ const Profile = () => {
                 Follow
               </button>
             )}
+          </div>
           </div>
           <div className="mt-6">
             {userTweets.map((tweet)=>{

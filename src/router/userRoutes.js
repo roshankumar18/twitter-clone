@@ -24,4 +24,4 @@ router.put('/follow/:id',protect,followUser)
 router.put('/unfollow/:id',protect,unFollowUser)
 
 
-module.exports = router
+module.exports = router 

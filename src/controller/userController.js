@@ -50,7 +50,7 @@ exports.getUser  = async(req,res)=>{
 }
 
 exports.userById = async(req,res)=>{
-    const user = await User.findById(req.params.id).select('-password').populate({path:'tweets',populate:{path:'comment'}})
+    const user = await User.findById(req.params.id).populate({path:'tweets', populate:{path:'comment user'}}).select('-password')
     if(!user){
     res.status(401).json({"message":"User not found"})
     }
@@ -82,11 +82,13 @@ exports.deleteUserById = async(req,res)=>{
 exports.getTimelines = async(req,res)=>{
     try{
     const user = await User.findById(req.userId)
-    const userTweet = await Tweet.find({user:req.userId})
+    const userTweet = await Tweet.find({user:req.userId}).populate('user')
+    
+    
     const followingTweets = await Promise.all(user.following.map(followingId=>{
-        return Tweet.find({user:followingId})
+        return Tweet.find({user:followingId}).populate('user')
     }))
-    console.log(followingTweets)
+    // console.log(followingTweets)
     if(followingTweets.length==0)
         return res.json(userTweet)
         
@@ -106,7 +108,7 @@ exports.uploadImage = async(req,res)=>{
        }
        const cloudImage = await cloudinary.uploader.upload(data.image)
        const user = await User.findOneAndUpdate({_id:req.userId},{profileImage:cloudImage.url},{new:true})
-       res.status(200).json({"url":cloudImage.url})
+       res.status(200).json(user)
     }catch(err){
         console.log(err)
         res.status(500).json({

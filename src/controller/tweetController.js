@@ -30,7 +30,7 @@ exports.createTweet = async(req,res)=>{
     user.tweets.push(tweetModel)
     await user.save()
     res.json({tweetModel})
-}catch(err){
+}catch(err){    
     console.log(err)
     res.status(500).json({"message":"failure"})
 }
@@ -56,8 +56,9 @@ exports.getAllTweets = async(req,res) => {
 exports.explore = async(req,res)=>{
     try{
         const exploreTweet = await Tweet.find({
+            user:{$ne:req.userId},
             like:{$exists:true},
-        }).sort({like:-1})
+        }).populate({path:'user',select:'-password'}).sort({like:-1})
         res.status(200).json({exploreTweet})
     }catch{(err)
         console.log(err)

@@ -15,20 +15,20 @@ const   Tweet = ({ tweet, setData }) => {
     const { id } = useParams();
     
     // const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
-    useEffect(() => {
-    const fetchData = async () => {
-      try {
+  //   useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
 
-        const findUser = await axios.get(`/user/${tweet.user}`);
+  //       const findUser = await axios.get(`/user/${tweet.user}`);
     
-        setUserData(findUser.data);
-      } catch (err) {
-        console.log("error", err);
-      }
-    };
+  //       setUserData(findUser.data);
+  //     } catch (err) {
+  //       console.log("error", err);
+  //     }
+  //   };
 
-    fetchData();
-  },[tweet,tweet.like] );
+  //   fetchData();
+  // },[tweet,tweet.like] );
 
     
     const handleLike = async(e) =>{
@@ -61,10 +61,10 @@ const   Tweet = ({ tweet, setData }) => {
     return (
       <>
       <div className="flex space-x-2">
-          <Link to={`/profile/${tweet.user}`} >
-              <h3 className='font-bold'>{userData.username}</h3>
+          <Link to={`/profile/${tweet.user._id}`} >
+              <h3 className='font-bold'>{tweet.user.username}</h3>
           </Link>
-            <span className="font-normal">@{userData.username}</span>
+            <span className="font-normal">@{tweet.user.username}</span>
           {/* <p> - {dateStr}</p> */}
       </div>
       <div>

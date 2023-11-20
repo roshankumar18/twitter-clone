@@ -28,7 +28,7 @@ exports.unFollowUser = async (req,res)=>{
         {currentUser.following.pull(user)
         await currentUser.save()
         user.followers.pull(currentUser)
-        await currentUser.save()
+        await user.save()
         res.json({
             "message":"UnFollowed"
         })

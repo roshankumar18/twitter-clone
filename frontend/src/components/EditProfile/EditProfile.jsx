@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { loginSuccess } from '../../redux/UserSlice';
 
 const EditProfile = ({setOpen ,setImageUrl}) => {
 
   const { currentUser } = useSelector((state) => state.user);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const navigate = useNavigate();
   
 
@@ -21,8 +22,9 @@ const EditProfile = ({setOpen ,setImageUrl}) => {
       }
       try{
           const res = await axios.put("http://localhost:3000/user/",formData,config)
-          console.log(res.data.url)
-          setImageUrl(res.data.url)
+          console.log(res.data.profileImage)
+          setImageUrl(res.data.profileImage)
+          dispatch(loginSuccess(res.data))
       }catch(err){
         console.log(err)
       }
